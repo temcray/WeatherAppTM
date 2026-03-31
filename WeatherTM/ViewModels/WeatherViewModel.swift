@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import Combine
+
 
 @MainActor
- class WeatherViewModel: ObservableObject {
+ final class WeatherViewModel: ObservableObject {
     
     @Published var searchText:String = ""
     @Published var cityName: String = ""
@@ -34,14 +36,14 @@ import Foundation
         if trimmedText.isEmpty {
             self.errorMessage = "Please type a city name."
             self.isLoading = false
+            return
         }
         
         do {
-            
-            let result = try await weatherNetworkService.fetchCurrentWeather(forCity: trimmedText)
-            self.cityName = result.cityName
-            self.temperatureText = "Temperature: \(result.weather.temperature) Celcius"
-            self.windText = Wind: \(result.weather.windspeed) km/hostent
+            let result = try await weatherNetworkService.fetchCurrentWeather(cityname: trimmedText)
+            self.cityName = result.cityname
+            self.temperatureText = "Temperature: \(result.weather.temperature) Celsius"
+            self.windText = "Wind: \(result.weather.windspeed) km/h"
             self.timeText = "Time \(result.weather.time)"
             
             

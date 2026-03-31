@@ -15,6 +15,13 @@ enum NetworkError: Error {
 }
 
 class WeatherService{
+    func fetchCurrentWeather (cityname: String) async throws -> (cityname: String, weather: CurrentWeather ) {
+        
+        let coordinates = try await fetchCoordinates(forCity: cityname)
+        let currentWeather = try await fetchWeather(latitude: coordinates.latitude, longitude: coordinates.longitude)
+        
+        return (coordinates.name, currentWeather)
+    }
     
     private func fetchCoordinates(forCity city:String) async throws -> GeocodingResult{
         var urlComponents: URLComponents? = URLComponents(string: "https://geocoding-api.open-meteo.com/v1/seach")
